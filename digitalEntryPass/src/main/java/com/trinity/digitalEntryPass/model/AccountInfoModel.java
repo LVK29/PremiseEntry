@@ -18,7 +18,7 @@ public class AccountInfoModel {
 	private String sso;
 	private String name;
 	private String dob;
-	
+	private String email;
 	private VisitorType userType;
 	private Boolean isRegistered;
 	private String password;
@@ -26,6 +26,19 @@ public class AccountInfoModel {
 	
 	public AccountInfoModel() {
 
+	}
+
+	public AccountInfoModel(String sso, String name, String dob, String email, VisitorType userType,
+			Boolean isRegistered, String password, List<SelfScreeningModel> selfScreeningModel) {
+		super();
+		this.sso = sso;
+		this.name = name;
+		this.dob = dob;
+		this.email = email;
+		this.userType = userType;
+		this.isRegistered = isRegistered;
+		this.password = password;
+		this.selfScreeningModel = selfScreeningModel;
 	}
 
 	@Override
@@ -89,6 +102,14 @@ public class AccountInfoModel {
 
 	public void setSelfScreeningModel(List<SelfScreeningModel> selfScreeningModel) {
 		this.selfScreeningModel = selfScreeningModel;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	
