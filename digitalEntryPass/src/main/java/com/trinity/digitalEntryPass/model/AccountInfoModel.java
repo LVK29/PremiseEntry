@@ -9,20 +9,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+
 @Document(collection = "accountInfo")
 public class AccountInfoModel {
-
-	public AccountInfoModel(String sso, String name, String dob, VisitorType userType, Boolean isRegistered,
-			String password, List<SelfScreeningModel> selfScreeningModel) {
-		super();
-		this.sso = sso;
-		this.name = name;
-		this.dob = dob;
-		this.userType = userType;
-		this.isRegistered = isRegistered;
-		this.password = password;
-		this.selfScreeningModel = selfScreeningModel;
-	}
 
 	public enum VisitorType {
 	    EMPLOYEE, CONTRACTOR;
@@ -33,16 +22,28 @@ public class AccountInfoModel {
 	private String sso;
 	private String name;
 	private String dob;
-	
+	private String email;
 	private VisitorType userType;
 	private Boolean isRegistered;
-	
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	private List<SelfScreeningModel> selfScreeningModel;
 	
 	public AccountInfoModel() {
 
+	}
+
+	public AccountInfoModel(String sso, String name, String dob, String email, VisitorType userType,
+			Boolean isRegistered, String password, List<SelfScreeningModel> selfScreeningModel) {
+		super();
+		this.sso = sso;
+		this.name = name;
+		this.dob = dob;
+		this.email = email;
+		this.userType = userType;
+		this.isRegistered = isRegistered;
+		this.password = password;
+		this.selfScreeningModel = selfScreeningModel;
 	}
 
 	@Override
@@ -106,6 +107,14 @@ public class AccountInfoModel {
 
 	public void setSelfScreeningModel(List<SelfScreeningModel> selfScreeningModel) {
 		this.selfScreeningModel = selfScreeningModel;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	
