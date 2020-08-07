@@ -4,13 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection="selfScreening")
 public class SelfScreeningModel {
-	
+
 	private Date date;
 	private Boolean cough;
 	private Boolean fever;
@@ -22,13 +19,9 @@ public class SelfScreeningModel {
 	private List<String> visitedCountries;
 	private Boolean closeContact;
 
-	public SelfScreeningModel() {
-
-	}
-
-	public SelfScreeningModel(Boolean cough, Boolean fever, Date date, Boolean soreThroat, Boolean breathingDifficulty,
-			Boolean isArogaSetuPresent, Boolean isApthamitraPresent, Boolean fromContainmentZone,
-			List<String> visitedCountries, Boolean closeContact) {
+	public SelfScreeningModel(Boolean cough, Boolean fever, Date date, Boolean soreThroat,
+			Boolean breathingDifficulty, Boolean isArogaSetuPresent, Boolean isApthamitraPresent,
+			Boolean fromContainmentZone, List<String> visitedCountries, Boolean closeContact) {
 		super();
 		this.cough = cough;
 		this.fever = fever;
