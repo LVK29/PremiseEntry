@@ -6,6 +6,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
+
 @Document(collection = "accountInfo")
 public class AccountInfoModel {
 
@@ -21,6 +25,7 @@ public class AccountInfoModel {
 	private String email;
 	private VisitorType userType;
 	private Boolean isRegistered;
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	private List<SelfScreeningModel> selfScreeningModel;
 	
