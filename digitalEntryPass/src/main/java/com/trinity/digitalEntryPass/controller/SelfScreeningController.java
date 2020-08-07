@@ -1,57 +1,35 @@
 package com.trinity.digitalEntryPass.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itextpdf.text.DocumentException;
 import com.trinity.digitalEntryPass.model.SelfScreeningModel;
-import com.trinity.digitalEntryPass.service.GeSelfScreeningForm;
-import com.trinity.digitalEntryPass.service.GovtFormGenerator;
-import com.trinity.digitalEntryPass.service.impl.UserDetailsServiceImpl;
+import com.trinity.digitalEntryPass.service.SelfScreeningService;
 
 @RestController
-//@RequestMapping("/{userSSO}")
 public class SelfScreeningController {
-	
+
 	@Autowired
-	UserDetailsServiceImpl userDetailsService;
-	
-	@Autowired
-	GeSelfScreeningForm geSelfScreeningForm;
-	
-	@Autowired
-	GovtFormGenerator govtFormGenerator;
+	SelfScreeningService selfScreeningService;
 
 	@RequestMapping(value = "/selfScreening", method = RequestMethod.POST)
-	public String saveSelfScreening(@RequestBody SelfScreeningModel selfScreeningModel) {
-		return "";
+	public void saveSelfScreening(@RequestBody SelfScreeningModel selfScreeningModel) {
+		selfScreeningService.saveScreeningInfoToCustomer("212668393", selfScreeningModel);
 	}
 
 	@RequestMapping(value = "/selfScreening", method = RequestMethod.GET)
-	public String getSelfScreening() {
-		return "";
+	public SelfScreeningModel getSelfScreening() {
+		return selfScreeningService.getCustomerScreeningInfo("212668393");
 	}
 
 	@RequestMapping(value = "/selfScreening", method = RequestMethod.PUT)
-	public String updateSelfScreening(@RequestBody SelfScreeningModel selfScreeningModel) {
-		return "";
+	public void updateSelfScreening(@RequestBody SelfScreeningModel newSelfScreeningModel) {
+		selfScreeningService.updateLatestCustomerScreeningInfo("212668393", newSelfScreeningModel);
 	}
 
-	@RequestMapping(value = "/selfScreeningSubmit", method = RequestMethod.POST)
-	public String saveSelfScreening(@RequestParam Boolean scannedEntry) {
-		try {
-			String user = userDetailsService.getCurrentUserfromToken();
-			geSelfScreeningForm.generateForm(user);
-			govtFormGenerator.generateForm(user);
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return "form Genrated";
-	}
-	
 }

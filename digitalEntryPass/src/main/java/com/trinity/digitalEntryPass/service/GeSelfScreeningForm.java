@@ -4,9 +4,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import org.springframework.stereotype.Service;
-
 import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
@@ -19,17 +18,16 @@ import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 
-@Service
 public class GeSelfScreeningForm {
 
-	public void generateForm(String user) throws DocumentException {
+	public void generateForm() throws DocumentException {
 		// Creating PDF document object
 
 		// Saving the document
 		try {
 			// get form
 			// get form
-			PdfReader pdfReader = new PdfReader(getClass().getResourceAsStream("/templates/geSelfScreeningForm.pdf"));
+			PdfReader pdfReader = new PdfReader("../cabge/src/main/resources/templates/geSelfScreeningForm.pdf");
 			// Modify file using PdfReader
 			// new pdf file name
 			PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileOutputStream("filled_GESelfScreening_Form.pdf"));
@@ -45,8 +43,6 @@ public class GeSelfScreeningForm {
 
 			
 			pdfStamper.close();
-			
-			
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -59,8 +55,8 @@ public class GeSelfScreeningForm {
 
 	private static void addTicks(PdfContentByte content)
 			throws BadElementException, MalformedURLException, IOException, DocumentException {
-		//String filename=new ClassPathResource("/images/tick.png").getFilename();
-		Image image = Image.getInstance("./src/main/resources/images/tick.png");
+		String filename = "tick.png";
+		Image image = Image.getInstance(filename);
 		image.scaleAbsolute(15, 15);
 
 		// "yes" column positions
