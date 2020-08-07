@@ -1,6 +1,5 @@
 package com.trinity.digitalEntryPass.service;
 
-import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,8 @@ import com.trinity.digitalEntryPass.dao.SelfScreeningDao;
 import com.trinity.digitalEntryPass.model.AccountInfoModel;
 import com.trinity.digitalEntryPass.model.SelfScreeningModel;
 import com.trinity.digitalEntryPass.repository.AccountInfoMongoRepository;
+import com.trinity.digitalEntryPass.repository.EmployeeEntryExitRepository;
+import com.trinity.digitalEntryPass.repository.FloorDataRepository;
 
 @Service
 public class SelfScreeningService {
@@ -20,14 +21,23 @@ public class SelfScreeningService {
 
 	@Autowired
 	SelfScreeningDao selfScreeningDao;
-	
+
+	@Autowired
+	GeneralUtils generalUtils;
+
 	@Autowired
 	AccountInfoDao accountInfoDoc;
+
+	@Autowired
+	FloorDataRepository floorDatarepository;
+
+	@Autowired
+	EmployeeEntryExitRepository employeeExitRepository;
 
 	public void saveScreeningInfoToCustomer(String userName, SelfScreeningModel newSelfScreeningData) {
 		AccountInfoModel userAccountModel = accountInfoDoc.getAccountInfo(userName);
 		List<SelfScreeningModel> selfScreeningList = userAccountModel.getSelfScreeningModel();
-		newSelfScreeningData.setDate(Calendar.getInstance().getTime());
+		newSelfScreeningData.setDate(generalUtils.convertTimeToStringData());
 		selfScreeningList.add(newSelfScreeningData);
 		userAccountModel.setSelfScreeningModel(selfScreeningList);
 		accountInfoDoc.saveAccountInfo(userAccountModel);
@@ -47,7 +57,7 @@ public class SelfScreeningService {
 		selfScreeningList.setBreathingDifficulty(newSelfScreeningModel.getBreathingDifficulty());
 		selfScreeningList.setCloseContact(newSelfScreeningModel.getCloseContact());
 		selfScreeningList.setCough(newSelfScreeningModel.getCough());
-		selfScreeningList.setDate(Calendar.getInstance().getTime());
+		selfScreeningList.setDate(generalUtils.convertTimeToStringData());
 		selfScreeningList.setFever(newSelfScreeningModel.getFever());
 		selfScreeningList.setFromContainmentZone(newSelfScreeningModel.getFromContainmentZone());
 		selfScreeningList.setIsApthamitraPresent(newSelfScreeningModel.getIsApthamitraPresent());
@@ -57,5 +67,17 @@ public class SelfScreeningService {
 		selfScreeningDao.saveSelfScreeningDao(userAccountModel);
 
 	}
+
+//	public int getEmployeesPresentInCommonSpace(String date) {
+//		List<FloorDataModel> floorData = floorDatarepository.queryForFloorDate();
+//		int count = 0;
+//		for (EmployeeEntryExitModel employeeEntryExit : floorData.get(0).getFloorEmployeeData().get(date)) {
+//			if (employeeEntryExit.getCheckOutTime() == null) {
+//				count++;
+//			}
+//		}
+//		return count;
+//
+//	}
 
 }

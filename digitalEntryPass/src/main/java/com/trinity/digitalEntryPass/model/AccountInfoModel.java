@@ -10,7 +10,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class AccountInfoModel {
 
 	public enum VisitorType {
-	    EMPLOYEE, CONTRACTOR;
+	    EMPLOYEE, CONTRACTOR, ADMIN;
+	}
+	public enum ScanType {
+	    ENTRY, EXIT;
 	}
 	
 	@Id

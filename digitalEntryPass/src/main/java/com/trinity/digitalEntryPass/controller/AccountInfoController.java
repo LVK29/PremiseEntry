@@ -34,7 +34,7 @@ public class AccountInfoController {
 		c.add("China");
 		c.add("Japan");
 		accountInfoModel.setUserType(VisitorType.EMPLOYEE);
-		s.add(new SelfScreeningModel(true, true, Calendar.getInstance().getTime(), false, true, true, true, false, c,
+		s.add(new SelfScreeningModel(true, true, "07/08/2020", false, true, true, true, false, c,
 				true));
 		accountInfoModel.setSelfScreeningModel(s);
 

@@ -8,4 +8,5 @@ import com.trinity.digitalEntryPass.model.AccountInfoModel;
 @Repository
 public interface AccountInfoMongoRepository extends MongoRepository<AccountInfoModel, String> {
 
+	
 }
