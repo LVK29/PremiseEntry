@@ -15,6 +15,7 @@ import com.trinity.digitalEntryPass.model.AccountInfoModel.VisitorType;
 import com.trinity.digitalEntryPass.model.SelfScreeningModel;
 import com.trinity.digitalEntryPass.repository.AccountInfoMongoRepository;
 import com.trinity.digitalEntryPass.service.AccountInfoService;
+import com.trinity.digitalEntryPass.service.impl.UserDetailsServiceImpl;
 
 @RestController
 public class AccountInfoController {
@@ -57,4 +58,3 @@ public class AccountInfoController {
 	}
 
 }
-© 2020 GitHub, Inc.
