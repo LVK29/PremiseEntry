@@ -1,17 +1,13 @@
 package com.trinity.digitalEntryPass.model;
 
-import java.util.Date;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="selfScreening")
 public class SelfScreeningModel {
 	
-	private Date date;
+	private String date;
 	private Boolean cough;
 	private Boolean fever;
 	private Boolean soreThroat;
@@ -26,7 +22,7 @@ public class SelfScreeningModel {
 
 	}
 
-	public SelfScreeningModel(Boolean cough, Boolean fever, Date date, Boolean soreThroat, Boolean breathingDifficulty,
+	public SelfScreeningModel(Boolean cough, Boolean fever, String date, Boolean soreThroat, Boolean breathingDifficulty,
 			Boolean isArogaSetuPresent, Boolean isApthamitraPresent, Boolean fromContainmentZone,
 			List<String> visitedCountries, Boolean closeContact) {
 		super();
@@ -67,11 +63,11 @@ public class SelfScreeningModel {
 		this.fever = fever;
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 

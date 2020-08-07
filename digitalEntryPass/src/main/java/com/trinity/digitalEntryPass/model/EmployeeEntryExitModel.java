@@ -8,35 +8,22 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection="employeeEntryExit")
 public class EmployeeEntryExitModel {
 	@Id
-	private String id;
-	private String sso;
-	private Date inTime;
-	private Date outTime;
+	private String _id;
 	
+	private String sso;
+	private Date checkInTime;
+	private Date checkOutTime;
+	
+	
+	public EmployeeEntryExitModel(String sso, Date checkInTime, Date checkOutTime) {
+		super();
+		this.sso = sso;
+		this.checkInTime = checkInTime;
+		this.checkOutTime = checkOutTime;
+	}
+
 	EmployeeEntryExitModel(){
 		
-	}
-
-	public EmployeeEntryExitModel(String sso, Date inTime, Date outTime) {
-		
-		this.sso = sso;
-		this.inTime = inTime;
-		this.outTime = outTime;
-	}
-	
-
-	@Override
-	public String toString() {
-		return "EmployeeEntryExitModel [id=" + id + ", sso=" + sso + ", inTime=" + inTime + ", outTime=" + outTime
-				+ "]";
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getSso() {
@@ -47,24 +34,21 @@ public class EmployeeEntryExitModel {
 		this.sso = sso;
 	}
 
-	public Date getInTime() {
-		return inTime;
+	public Date getcheckInTime() {
+		return checkInTime;
 	}
 
-	public void setInTime(Date inTime) {
-		this.inTime = inTime;
+	public void setcheckInTime(Date checkInTime) {
+		this.checkInTime = checkInTime;
 	}
 
-	public Date getOutTime() {
-		return outTime;
+	public Date getCheckOutTime() {
+		return checkOutTime;
 	}
 
-	public void setOutTime(Date outTime) {
-		this.outTime = outTime;
+	public void setCheckOutTime(Date checkOutTime) {
+		this.checkOutTime = checkOutTime;
 	}
-	
-	
-	
-	
+	 
 	
 }

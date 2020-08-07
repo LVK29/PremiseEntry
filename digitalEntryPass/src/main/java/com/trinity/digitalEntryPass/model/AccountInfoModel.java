@@ -14,7 +14,10 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 public class AccountInfoModel {
 
 	public enum VisitorType {
-	    EMPLOYEE, CONTRACTOR;
+	    EMPLOYEE, CONTRACTOR, ADMIN;
+	}
+	public enum ScanType {
+	    ENTRY, EXIT;
 	}
 	
 	@Id
