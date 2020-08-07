@@ -88,24 +88,21 @@ public class EntryExitScanService {
 						for (EmployeeEntryExitModel floorEmpData : allFloorEmployeeDataForToday) {
 
 							//if ((scanType.equals(ScanType.ENTRY.toString()))) {
-								if (floorEmpData.getSso().equals(sso) && floorEmpData.getCheckOutTime() == null) {
-									floorEmpData.setCheckOutTime(Calendar.getInstance().getTime());
-									proxyRecordAdded = true;
+								if (floorEmpData.getSso().equals(sso)){ 
+									if(floorEmpData.getCheckOutTime() == null){
+										floorEmpData.setCheckOutTime(Calendar.getInstance().getTime());
+										proxyRecordAdded = true;
+									}
+									if(floorEmpData.getcheckInTime() == null){
+										floorEmpData.setcheckInTime(Calendar.getInstance().getTime());
+										proxyRecordAdded = true;
+									}
+									
 								}
-								if (floorEmpData.getSso().equals(sso) && floorEmpData.getcheckInTime() == null) {
-									floorEmpData.setcheckInTime(Calendar.getInstance().getTime());
-									proxyRecordAdded = true;
-								}
-							//	}
-//							} else if (scanType.equals(ScanType.EXIT.toString())) {
-//								if (floorEmpData.getSso().equals(sso) && floorEmpData.getcheckInTime() == null) {
-//									floorEmpData.setcheckInTime(Calendar.getInstance().getTime());
-////									proxyRecordAdded = true;
-//								}
-//							}
+							
 						}
 					}
-				//}
+				 
 				floorDatarepository.save(floorData);
 			}
 
@@ -115,13 +112,7 @@ public class EntryExitScanService {
 
 	}
 
-	// TODO Auto-generated method stub
-	// get all floor data for that date
-
-	// if its entry mark all exits date for any other floor
-
-	// if its exit mark all entry date for any other
-
+	
 	public int getEmployeesPresentInCommonSpace(String floorId, String date) {
 		List<FloorDataModel> floorData = floorDatarepository.queryForFloorDate(floorId, date);
 		int count = 0;
