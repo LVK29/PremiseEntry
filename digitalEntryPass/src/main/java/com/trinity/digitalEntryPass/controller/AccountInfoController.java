@@ -49,12 +49,12 @@ public class AccountInfoController {
 
 	@RequestMapping(value = "/accountInfo", method = RequestMethod.GET)
 	public AccountInfoModel getAccountInfo() {
-		return accountInfoService.getAccountInfo("212668393");
+		return accountInfoService.getAccountInfo(userDetailsServiceImpl.getCurrentUserfromToken());
 	}
 
 	@RequestMapping(value = "/accountInfo", method = RequestMethod.PUT)
 	public void updateAccountInfo(@RequestBody AccountInfoModel newAccountInfoModel) {
-		accountInfoService.updateAccountInfo("212668393", newAccountInfoModel);
+		accountInfoService.updateAccountInfo(userDetailsServiceImpl.getCurrentUserfromToken(), newAccountInfoModel);
 	}
 
 }

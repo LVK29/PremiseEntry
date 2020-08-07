@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.trinity.digitalEntryPass.model.EmployeeEntryExitModel;
 import com.trinity.digitalEntryPass.model.FloorDataModel;
+import com.trinity.digitalEntryPass.model.AccountInfoModel.ScanType;
 import com.trinity.digitalEntryPass.service.Demo;
 import com.trinity.digitalEntryPass.service.EntryExitScanService;
+import com.trinity.digitalEntryPass.service.GeneralUtils;
+import com.trinity.digitalEntryPass.service.impl.UserDetailsServiceImpl;
 
 @RestController
 public class EntryExitScanController {
@@ -24,7 +27,12 @@ public class EntryExitScanController {
 
 	@Autowired
 	EntryExitScanService entryExitScanService;
-	// post scans code
+
+	@Autowired
+	UserDetailsServiceImpl userDetailsServiceImpl;
+
+	@Autowired
+	GeneralUtils generalUtils;
 
 	// code can be entry, floorentry, exit,
 
@@ -34,7 +42,7 @@ public class EntryExitScanController {
 		// get qr code
 		// String floorId = "7F_Entry";
 		// String floorId = "7F_Exit";
-		String sso = "212668393";
+		String sso = userDetailsServiceImpl.getCurrentUserfromToken();
 		String[] floorIdStrings = floorId.split("_", 2);
 		String floorIdCode = floorIdStrings[0];
 		String scanType = floorIdStrings[1].toUpperCase();
@@ -46,17 +54,21 @@ public class EntryExitScanController {
 			floorData = new FloorDataModel(floorIdCode, floorIdCode, newFloorData);
 
 		}
-		return entryExitScanService.saveCheckIn(floorData, sso, scanType);
-		// FloorDataModel floorDetails = entryExitScanService.getFloorDetails();
-		// floorDetails.getFloorData()
-		// save the time to the respective floor code with sso
+		
+		// mark all possible open and exit entryes
+		if(entryExitScanService.markAllPossibleScan(scanType, floorIdCode, sso)){
+			System.out.println("Changed a few incorrect time stamps for entry/exit");
+		}
+		// get updated floorData
+		FloorDataModel updatedFloorData = entryExitScanService.getFloorDetails(floorIdCode);
 
-		// if its entry code check for null exit codes and save time with
-		// warning
+		// save scan entry
+		entryExitScanService.saveQRFloorScan(updatedFloorData, sso, scanType);
+				
+		// return entry count 
+		return entryExitScanService.getEmployeesPresentInCommonSpace(floorData.getFloorCode(),
+				generalUtils.convertTimeToStringData());
 
-		// if its exit code check for entry codes and save time with warning
-
-		// get count of all ppl in the floor currently
 
 		// demo.encryptTest();
 	}
