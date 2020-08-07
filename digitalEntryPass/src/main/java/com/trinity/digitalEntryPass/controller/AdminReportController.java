@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.trinity.digitalEntryPass.model.SelfScreeningModel;
 import com.trinity.digitalEntryPass.service.SelfScreeningService;
+import com.trinity.digitalEntryPass.service.impl.UserDetailsServiceImpl;
 
 @RestController
 public class AdminReportController {
@@ -15,6 +16,8 @@ public class AdminReportController {
 	@Autowired
 	SelfScreeningService selfScreeningService;
 	
+	@Autowired
+	UserDetailsServiceImpl userDetailsServiceImpl;
 	
 	@RequestMapping("/allSelfSceeningData")
 	public List<SelfScreeningModel> getAllSelfScreeningForDate(){

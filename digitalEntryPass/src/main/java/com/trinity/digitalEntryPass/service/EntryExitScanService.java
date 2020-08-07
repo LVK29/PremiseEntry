@@ -33,7 +33,7 @@ public class EntryExitScanService {
 	@Autowired
 	FloorDataRepository floorDatarepository;
 
-	public int saveCheckIn(FloorDataModel floorData, String sso, String scanType) {
+	public void saveQRFloorScan(FloorDataModel floorData, String sso, String scanType) {
 
 		if (scanType.equals(ScanType.ENTRY.toString())) {
 			EmployeeEntryExitModel employeeEntryExit = new EmployeeEntryExitModel(sso, Calendar.getInstance().getTime(),
@@ -69,9 +69,50 @@ public class EntryExitScanService {
 
 		}
 
-		return getEmployeesPresentInCommonSpace(floorData.getFloorCode(), generalUtils.convertTimeToStringData());
 	}
 
+	public Boolean markAllPossibleScan(String scanType, String currentFloorCode, String sso) {
+		// String[] floorCodes = { "GFL", "GFR", "1F", "2F", "3F", "4F", "5F",
+		// "6F", "7F" };
+		String today = generalUtils.convertTimeToStringData();
+
+		// get all floor data
+		Boolean proxyRecordAdded = false;
+		List<FloorDataModel> floorDatas = floorDatarepository.queryAllFloorDate(today);
+		if (floorDatas.size() > 0) {
+			for (FloorDataModel floorData : floorDatas) {
+				//if (!floorData.getFloorCode().equals(currentFloorCode)) {
+					List<EmployeeEntryExitModel> allFloorEmployeeDataForToday = floorData.getFloorEmployeeData()
+							.get(today);
+					if (allFloorEmployeeDataForToday != null) {
+						for (EmployeeEntryExitModel floorEmpData : allFloorEmployeeDataForToday) {
+
+							//if ((scanType.equals(ScanType.ENTRY.toString()))) {
+								if (floorEmpData.getSso().equals(sso)){ 
+									if(floorEmpData.getCheckOutTime() == null){
+										floorEmpData.setCheckOutTime(Calendar.getInstance().getTime());
+										proxyRecordAdded = true;
+									}
+									if(floorEmpData.getcheckInTime() == null){
+										floorEmpData.setcheckInTime(Calendar.getInstance().getTime());
+										proxyRecordAdded = true;
+									}
+									
+								}
+							
+						}
+					}
+				 
+				floorDatarepository.save(floorData);
+			}
+
+		}
+
+		return proxyRecordAdded;
+
+	}
+
+	
 	public int getEmployeesPresentInCommonSpace(String floorId, String date) {
 		List<FloorDataModel> floorData = floorDatarepository.queryForFloorDate(floorId, date);
 		int count = 0;

@@ -7,4 +7,6 @@ import com.trinity.digitalEntryPass.model.FloorDataModel;
 public interface CustomDataRepository {
 
 	public List<FloorDataModel> queryForFloorDate(String floorID, String Date);
+
+	public List<FloorDataModel> queryAllFloorDate(String Date);
 }

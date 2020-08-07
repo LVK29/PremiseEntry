@@ -42,7 +42,7 @@ public class RegistrationController {
 		accountInfoModel.setUserType(VisitorType.EMPLOYEE);
 		System.out.println(passwordEncoder.encode(accountInfoModel.getPassword()));
 		accountInfoModel.setPassword(passwordEncoder.encode(accountInfoModel.getPassword()));
-		s.add(new SelfScreeningModel(true, true, Calendar.getInstance().getTime(), false, true, true, true, false,c,true));
+		s.add(new SelfScreeningModel(true, true, "29/7/1995", false, true, true, true, false,c,true));
 		accountInfoModel.setSelfScreeningModel(s);
 		accountInfoMongoRepository.save(accountInfoModel);
 
