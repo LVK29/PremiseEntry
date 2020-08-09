@@ -81,28 +81,28 @@ public class EntryExitScanService {
 		List<FloorDataModel> floorDatas = floorDatarepository.queryAllFloorDate(today);
 		if (floorDatas.size() > 0) {
 			for (FloorDataModel floorData : floorDatas) {
-				//if (!floorData.getFloorCode().equals(currentFloorCode)) {
-					List<EmployeeEntryExitModel> allFloorEmployeeDataForToday = floorData.getFloorEmployeeData()
-							.get(today);
-					if (allFloorEmployeeDataForToday != null) {
-						for (EmployeeEntryExitModel floorEmpData : allFloorEmployeeDataForToday) {
+				// if (!floorData.getFloorCode().equals(currentFloorCode)) {
+				List<EmployeeEntryExitModel> allFloorEmployeeDataForToday = floorData.getFloorEmployeeData().get(today);
+				if (allFloorEmployeeDataForToday != null) {
+					for (EmployeeEntryExitModel floorEmpData : allFloorEmployeeDataForToday) {
 
-							//if ((scanType.equals(ScanType.ENTRY.toString()))) {
-								if (floorEmpData.getSso().equals(sso)){ 
-									if(floorEmpData.getCheckOutTime() == null){
-										floorEmpData.setCheckOutTime(Calendar.getInstance().getTime());
-										proxyRecordAdded = true;
-									}
-									if(floorEmpData.getcheckInTime() == null){
-										floorEmpData.setcheckInTime(Calendar.getInstance().getTime());
-										proxyRecordAdded = true;
-									}
-									
+						if ((scanType.equals(ScanType.ENTRY.toString()))) {
+							if (floorEmpData.getSso().equals(sso)) {
+								if (floorEmpData.getCheckOutTime() == null) {
+									floorEmpData.setCheckOutTime(Calendar.getInstance().getTime());
+									proxyRecordAdded = true;
 								}
-							
+								if (floorEmpData.getcheckInTime() == null) {
+									floorEmpData.setcheckInTime(Calendar.getInstance().getTime());
+									proxyRecordAdded = true;
+								}
+
+							}
 						}
+
 					}
-				 
+				}
+
 				floorDatarepository.save(floorData);
 			}
 
@@ -112,7 +112,6 @@ public class EntryExitScanService {
 
 	}
 
-	
 	public int getEmployeesPresentInCommonSpace(String floorId, String date) {
 		List<FloorDataModel> floorData = floorDatarepository.queryForFloorDate(floorId, date);
 		int count = 0;
