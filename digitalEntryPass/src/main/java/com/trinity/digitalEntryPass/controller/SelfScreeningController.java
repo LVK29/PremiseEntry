@@ -13,6 +13,7 @@ import com.trinity.digitalEntryPass.service.impl.UserDetailsServiceImpl;
 @RestController
 public class SelfScreeningController {
 
+	
 	@Autowired
 	SelfScreeningService selfScreeningService;
 
