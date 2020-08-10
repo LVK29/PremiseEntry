@@ -4,7 +4,7 @@ package com.trinity.digitalEntryPass.repository;
 import java.util.List;
 import java.util.Optional;
 
->>>>>>> 7bf3e8a... Admin APIs:src/main/java/com/trinity/digitalEntryPass/repository/AccountInfoMongoRepository.java
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,6 +13,8 @@ import com.trinity.digitalEntryPass.model.AccountInfoModel;
 
 @Repository
 public interface AccountInfoMongoRepository extends MongoRepository<AccountInfoModel, String> {
+	
+	AccountInfoModel findBysso(String sso);
 
 
 	

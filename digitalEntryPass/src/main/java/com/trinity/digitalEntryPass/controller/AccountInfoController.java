@@ -15,6 +15,7 @@ import com.trinity.digitalEntryPass.model.AccountInfoModel.VisitorType;
 import com.trinity.digitalEntryPass.model.SelfScreeningModel;
 import com.trinity.digitalEntryPass.repository.AccountInfoMongoRepository;
 import com.trinity.digitalEntryPass.service.AccountInfoService;
+import com.trinity.digitalEntryPass.service.impl.UserDetailsServiceImpl;
 
 @RestController
 public class AccountInfoController {
@@ -24,6 +25,10 @@ public class AccountInfoController {
 
 	@Autowired
 	AccountInfoService accountInfoService;
+	
+	@Autowired
+	UserDetailsServiceImpl userDetailsServiceImpl;
+	
 
 	@RequestMapping(value = "/accountInfo", method = RequestMethod.POST)
 	public void saveAccountInfo(@RequestBody AccountInfoModel accountInfoModel) {
@@ -34,7 +39,7 @@ public class AccountInfoController {
 		c.add("China");
 		c.add("Japan");
 		accountInfoModel.setUserType(VisitorType.EMPLOYEE);
-		s.add(new SelfScreeningModel(true, true, Calendar.getInstance().getTime(), false, true, true, true, false, c,
+		s.add(new SelfScreeningModel(true, true, "07/08/2020", false, true, true, true, false, c,
 				true));
 		accountInfoModel.setSelfScreeningModel(s);
 
@@ -44,12 +49,12 @@ public class AccountInfoController {
 
 	@RequestMapping(value = "/accountInfo", method = RequestMethod.GET)
 	public AccountInfoModel getAccountInfo() {
-		return accountInfoService.getAccountInfo("212668393");
+		return accountInfoService.getAccountInfo(userDetailsServiceImpl.getCurrentUserfromToken());
 	}
 
 	@RequestMapping(value = "/accountInfo", method = RequestMethod.PUT)
 	public void updateAccountInfo(@RequestBody AccountInfoModel newAccountInfoModel) {
-		accountInfoService.updateAccountInfo("212668393", newAccountInfoModel);
+		accountInfoService.updateAccountInfo(userDetailsServiceImpl.getCurrentUserfromToken(), newAccountInfoModel);
 	}
 
 }
