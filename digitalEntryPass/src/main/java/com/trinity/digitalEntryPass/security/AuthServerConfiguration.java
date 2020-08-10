@@ -39,8 +39,8 @@ public class AuthServerConfiguration extends AuthorizationServerConfigurerAdapte
 				.secret(passwordEncoder.encode("secret"))
 				.authorizedGrantTypes("password", "client_credentials", "refresh_token")
 				.scopes("openid")
-				.accessTokenValiditySeconds(1800)
-				.refreshTokenValiditySeconds(3600);
+				.accessTokenValiditySeconds(180000)
+				.refreshTokenValiditySeconds(360000);
 	}
 
 	@Override

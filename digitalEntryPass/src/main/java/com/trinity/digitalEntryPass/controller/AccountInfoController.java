@@ -29,19 +29,20 @@ public class AccountInfoController {
 	@Autowired
 	UserDetailsServiceImpl userDetailsServiceImpl;
 	
+	
 
 	@RequestMapping(value = "/accountInfo", method = RequestMethod.POST)
 	public void saveAccountInfo(@RequestBody AccountInfoModel accountInfoModel) {
 
 		// remove these later on
-		List<SelfScreeningModel> s = new ArrayList<>();
-		List<String> c = new ArrayList<>();
-		c.add("China");
-		c.add("Japan");
-		accountInfoModel.setUserType(VisitorType.EMPLOYEE);
-		s.add(new SelfScreeningModel(true, true, "07/08/2020", false, true, true, true, false, c,
-				true));
-		accountInfoModel.setSelfScreeningModel(s);
+//		List<SelfScreeningModel> s = new ArrayList<>();
+//		List<String> c = new ArrayList<>();
+//		c.add("China");
+//		c.add("Japan");
+//		accountInfoModel.setUserType(VisitorType.EMPLOYEE);
+//		s.add(new SelfScreeningModel(true, true, "07/08/2020", false, true, true, true, false, c,
+//				true));
+//		accountInfoModel.setSelfScreeningModel(s);
 
 		accountInfoMongoRepository.save(accountInfoModel);
 
