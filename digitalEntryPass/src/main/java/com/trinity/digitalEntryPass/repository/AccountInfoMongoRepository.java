@@ -14,10 +14,7 @@ import com.trinity.digitalEntryPass.model.AccountInfoModel;
 @Repository
 public interface AccountInfoMongoRepository extends MongoRepository<AccountInfoModel, String> {
 	
-	AccountInfoModel findBysso(String sso);
 
-
-	
 	public AccountInfoModel findBysso(String sso);
 	
 	@Query(fields = "{'selfScreeningModel.$': 1, 'name':1, 'userType':1 ,'dob':1}")
