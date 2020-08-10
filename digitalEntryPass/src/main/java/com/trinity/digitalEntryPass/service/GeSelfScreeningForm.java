@@ -26,14 +26,15 @@ import com.trinity.digitalEntryPass.model.SelfScreeningModel;
 import com.trinity.digitalEntryPass.repository.AccountInfoMongoRepository;
 
 public class GeSelfScreeningForm {
-
-	public void generateForm() throws DocumentException {
 	
 	@Autowired
 	AccountInfoMongoRepository accountInfoMongoRepository;
 	
 	@Autowired
 	GeneralUtils generalUtils;
+
+	public void generateForm() throws DocumentException {
+	
 
 	public ByteArrayOutputStream generateForm(String date, String user) throws DocumentException {
 		// Creating PDF document object
