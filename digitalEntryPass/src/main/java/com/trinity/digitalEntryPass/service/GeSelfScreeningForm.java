@@ -33,9 +33,6 @@ public class GeSelfScreeningForm {
 	@Autowired
 	GeneralUtils generalUtils;
 
-	public void generateForm() throws DocumentException {
-	
-
 	public ByteArrayOutputStream generateForm(String date, String user) throws DocumentException {
 		// Creating PDF document object
 		String fileName = "filled_GESelfScreening_Form_"+user+".pdf";
