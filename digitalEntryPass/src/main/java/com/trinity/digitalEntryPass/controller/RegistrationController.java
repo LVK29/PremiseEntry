@@ -33,17 +33,17 @@ public class RegistrationController {
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String saveAccountInfo(@RequestBody AccountInfoModel accountInfoModel) {
 
-		List<SelfScreeningModel> g = new ArrayList<>();
-
-		List<SelfScreeningModel> s = new ArrayList<>();
-		List<String> c = new ArrayList<>();
-		c.add("China");
-		c.add("Japan");
-		accountInfoModel.setUserType(VisitorType.EMPLOYEE);
+//		List<SelfScreeningModel> g = new ArrayList<>();
+//
+//		List<SelfScreeningModel> s = new ArrayList<>();
+//		List<String> c = new ArrayList<>();
+//		c.add("China");
+//		c.add("Japan");
+//		accountInfoModel.setUserType(VisitorType.EMPLOYEE);
 		System.out.println(passwordEncoder.encode(accountInfoModel.getPassword()));
 		accountInfoModel.setPassword(passwordEncoder.encode(accountInfoModel.getPassword()));
-		s.add(new SelfScreeningModel(true, true, "29/7/1995", false, true, true, true, false,c,true));
-		accountInfoModel.setSelfScreeningModel(s);
+//		s.add(new SelfScreeningModel(true, true, "29/7/1995", false, true, true, true, false,c,true));
+//		accountInfoModel.setSelfScreeningModel(s);
 		accountInfoMongoRepository.save(accountInfoModel);
 
 		return "accountInfo is saved";
