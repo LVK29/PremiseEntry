@@ -62,8 +62,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		
 	}
 	
-	public boolean isPrincipalMatch(String user)
+	public Authentication getCurrentUserToken()
 	{
-		return SecurityContextHolder.getContext().getAuthentication().getName().equals(user);
+		return SecurityContextHolder.getContext().getAuthentication();
 	}
 }
