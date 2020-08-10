@@ -1,16 +1,23 @@
 package com.trinity.digitalEntryPass.service;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Image;
@@ -18,8 +25,10 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfSmartCopy;
 import com.itextpdf.text.pdf.PdfStamper;
 import com.trinity.digitalEntryPass.model.AccountInfoModel;
+import com.trinity.digitalEntryPass.model.AccountInfoModel.VisitorType;
 import com.trinity.digitalEntryPass.model.SelfScreeningModel;
 import com.trinity.digitalEntryPass.repository.AccountInfoMongoRepository;
 
@@ -28,25 +37,36 @@ public class GovtFormGenerator {
 	
 	@Autowired
 	AccountInfoMongoRepository accountInfoMongoRepository;
+	
+	@Autowired
+	GeneralUtils generalUtils;
+	
+	@Autowired
+	GeSelfScreeningForm geSelfScreeningForm;
+	
 
-	public void generateForm(String user) throws DocumentException {
+
+	public byte[] generateForm(String date, String user) throws DocumentException {
 		// Creating PDF document object
 
-		AccountInfoModel accInfo = accountInfoMongoRepository.findBysso(user);
+		AccountInfoModel accInfo = accountInfoMongoRepository.findByssoAndSelfScreeningModelDate(user, date);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		String fileName = "filled_Govt_Form5_"+user+".pdf";
 		// Saving the document
 		try {
+			
 			// get form
 			PdfReader pdfReader = new PdfReader(getClass().getResourceAsStream("/templates/govtForm5.pdf"));
-			// Modify file using PdfReader
-			// new pdf file name
-			PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileOutputStream("filled_Govt_Form5.pdf"));
+			
+			outputStream = generalUtils.getOutputStream(fileName);
+			PdfStamper pdfStamper = new PdfStamper(pdfReader, outputStream);
 			PdfContentByte content = pdfStamper.getOverContent(1);
 
 			// add name
 			ColumnText.showTextAligned(content, Element.ALIGN_LEFT, new Phrase(accInfo.getName()), 205, 652, 0);
 
 			// add name
-			ColumnText.showTextAligned(content, Element.ALIGN_LEFT, new Phrase(getAge(accInfo.getDob())), 205, 632, 0);
+			ColumnText.showTextAligned(content, Element.ALIGN_LEFT, new Phrase(generalUtils.getAge(accInfo.getDob())), 205, 632, 0);
 			
 			// add sso
 			ColumnText.showTextAligned(content, Element.ALIGN_LEFT, new Phrase(accInfo.getSso()), 205, 612, 0);
@@ -54,6 +74,18 @@ public class GovtFormGenerator {
 			addTicks(content,accInfo);
 
 			pdfStamper.close();
+			if(accInfo.getUserType().equals(VisitorType.CONTRACTOR))
+			{
+				List<byte[]> combinedData= new ArrayList<byte[]>();
+				combinedData.add(outputStream.toByteArray());
+				combinedData.add(geSelfScreeningForm.generateForm(date, user).toByteArray());
+				return combinePdfBytes(combinedData);
+			}
+			else
+			{
+				return outputStream.toByteArray();
+			}
+			
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -61,6 +93,7 @@ public class GovtFormGenerator {
 		}
 
 		System.out.println("PDF created");
+		return outputStream.toByteArray();
 
 	}
 
@@ -70,7 +103,7 @@ public class GovtFormGenerator {
 		image.scaleAbsolute(15, 15);
 		// "no" column positions
 		SelfScreeningModel selfScreen = accInfo.getSelfScreeningModel().get(accInfo.getSelfScreeningModel().size()-1);
-		if(selfScreen.getFever())
+		if(selfScreen.getFromContainmentZone())
 		{
 			image.setAbsolutePosition(390, 447);
 			content.addImage(image);
@@ -84,7 +117,7 @@ public class GovtFormGenerator {
 		}
 			
 			
-		if(selfScreen.getCough())
+		if(selfScreen.getIsApthamitraPresent())
 		{
 			image.setAbsolutePosition(390, 460);
 			content.addImage(image);
@@ -97,7 +130,7 @@ public class GovtFormGenerator {
 			
 		}
 			
-		if(selfScreen.getSoreThroat())
+		if(selfScreen.getIsArogaSetuPresent())
 		{
 			image.setAbsolutePosition(390, 475);
 			content.addImage(image);	
@@ -123,7 +156,7 @@ public class GovtFormGenerator {
 			
 		}
 
-		if(selfScreen.getIsArogaSetuPresent())
+		if(selfScreen.getSoreThroat())
 		{
 			image.setAbsolutePosition(390, 505);
 			content.addImage(image);
@@ -136,7 +169,7 @@ public class GovtFormGenerator {
 			
 		}
 			
-		if(selfScreen.getIsApthamitraPresent())
+		if(selfScreen.getCough())
 		{
 			image.setAbsolutePosition(390, 520);
 			content.addImage(image);
@@ -149,7 +182,7 @@ public class GovtFormGenerator {
 			
 		}
 			
-		if(selfScreen.getFromContainmentZone())
+		if(selfScreen.getFever())
 		{
 			image.setAbsolutePosition(390, 535);
 			content.addImage(image);
@@ -164,16 +197,26 @@ public class GovtFormGenerator {
 		
 	}
 	
-	public String getAge(String dob)
-	{
-		LocalDate today = LocalDate.now(); 
-		int year=Integer.parseInt(dob.split("/")[2]);
-		int month=Integer.parseInt(dob.split("/")[1]);
-		int day=Integer.parseInt(dob.split("/")[0]);
-		
-		LocalDate birthDate = LocalDate.of(year,month,day);
-		Period p = Period.between(birthDate, today);
-		return Integer.toString(p.getYears());
-		
-	}
+	public byte[] combinePdfBytes(List<byte[]> pdfByteList) {
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		Document doc = new Document();
+		PdfSmartCopy pdfCopy;
+		try {
+			pdfCopy = new PdfSmartCopy(doc, outputStream);
+			doc.open();
+			for ( byte[] pdfbyte :pdfByteList) {
+				PdfReader reader = new PdfReader(pdfbyte) ;
+	            pdfCopy.addDocument(reader);    
+	        }
+			doc.close();
+	        return outputStream.toByteArray();
+		} catch (DocumentException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return outputStream.toByteArray();
+	    }
+	
+	
 }
