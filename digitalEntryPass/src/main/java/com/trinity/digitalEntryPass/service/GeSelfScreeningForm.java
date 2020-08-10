@@ -25,6 +25,7 @@ import com.trinity.digitalEntryPass.model.AccountInfoModel;
 import com.trinity.digitalEntryPass.model.SelfScreeningModel;
 import com.trinity.digitalEntryPass.repository.AccountInfoMongoRepository;
 
+@Service
 public class GeSelfScreeningForm {
 	
 	@Autowired
