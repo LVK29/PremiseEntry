@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -52,23 +53,29 @@ public class AccountInfoController {
 	@Autowired
 	UserDetailsServiceImpl userDetailsServiceImpl;
 	
-
 	@Autowired
 	GovtFormGenerator govtFormGenerator;
 	
+	@Autowired
+	GeSelfScreeningForm geSelfScreeningForm;
+	
+	private String GOVTFORM = "govtForm";
+	private String VISITORFORM = "visForm";
+	
+
 
 	@RequestMapping(value = "/accountInfo", method = RequestMethod.POST)
 	public void saveAccountInfo(@RequestBody AccountInfoModel accountInfoModel) {
 
 		// remove these later on
-//		List<SelfScreeningModel> s = new ArrayList<>();
-//		List<String> c = new ArrayList<>();
-//		c.add("China");
-//		c.add("Japan");
-//		accountInfoModel.setUserType(VisitorType.EMPLOYEE);
-//		s.add(new SelfScreeningModel(true, true, "07/08/2020", false, true, true, true, false, c,
-//				true));
-//		accountInfoModel.setSelfScreeningModel(s);
+		List<SelfScreeningModel> s = new ArrayList<>();
+		List<String> c = new ArrayList<>();
+		c.add("China");
+		c.add("Japan");
+		accountInfoModel.setUserType(VisitorType.EMPLOYEE);
+		s.add(new SelfScreeningModel(true, true, "07/08/2020", false, true, true, true, false, c,
+				true));
+		accountInfoModel.setSelfScreeningModel(s);
 
 		accountInfoMongoRepository.save(accountInfoModel);
 
@@ -76,7 +83,7 @@ public class AccountInfoController {
 
 	@RequestMapping(value = "/accountInfo", method = RequestMethod.GET)
 	public AccountInfoModel getAccountInfo() {
-		// accountInfoMongoRepository.findBySelfScreeningModel_Date("08/08/2020");
+		 accountInfoMongoRepository.findBySelfScreeningModel_Date("08/08/2020");
 		 return accountInfoService.getAccountInfo(userDetailsServiceImpl.getCurrentUserfromToken());
 	}
 
@@ -94,17 +101,24 @@ public class AccountInfoController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/accountInfo/documentFile/{sso}/{date}/{visitorType}", method = RequestMethod.POST, produces=MediaType.APPLICATION_PDF_VALUE)
-	public @ResponseBody byte[] getDocuments(@PathVariable("date") String date, @PathVariable("sso") String sso, @PathVariable("visitorType") VisitorType visitorType) throws IOException
-	{
+	@RequestMapping(value = "/accountInfo/documentFile", method = RequestMethod.POST, produces=MediaType.APPLICATION_PDF_VALUE)
+	public @ResponseBody byte[] getDocuments(@RequestBody Map<String, String> request) throws IOException
+	{{
 		byte[] formData = null;
+		String sso = request.get("sso");
+		String date=request.get("date");
+		String docType=request.get("docType");
 		date=date.replace("-", "/");
 		try {
 			AccountInfoModel account =accountInfoMongoRepository.findBysso(userDetailsServiceImpl.getCurrentUserfromToken());
-			if(account.getUserType().equals(VisitorType.ADMIN))
+			if(docType!=null && docType.equals(GOVTFORM))
 			{
-					formData = govtFormGenerator.generateForm(date,sso, visitorType);
+					formData = govtFormGenerator.generateForm(date,sso);
 
+			}
+			if(docType!=null && docType.equals(VISITORFORM) && account.getUserType().equals(VisitorType.CONTRACTOR))
+			{
+				formData=geSelfScreeningForm.generateForm(date, sso);
 			}
 		}
 		
@@ -112,9 +126,7 @@ public class AccountInfoController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return formData;
-		 
+		return formData; 
 	}
-	
-	
+	}
 }
