@@ -33,6 +33,11 @@ public class EntryExitScanService {
 	@Autowired
 	FloorDataRepository floorDatarepository;
 
+	public void saveQRFloorScan(FloorDataModel floorData) {
+		floorDatarepository.save(floorData);
+
+	}
+
 	public void saveQRFloorScan(FloorDataModel floorData, String sso, String scanType) {
 
 		if (scanType.equals(ScanType.ENTRY.toString())) {
@@ -56,12 +61,14 @@ public class EntryExitScanService {
 
 		else if (scanType.equals(ScanType.EXIT.toString())) {
 			Map<String, List<EmployeeEntryExitModel>> FloorData1 = floorData.getFloorEmployeeData();
-			List<EmployeeEntryExitModel> employeeEntryExitListToday = FloorData1
-					.get(generalUtils.convertTimeToStringData());
-			for (EmployeeEntryExitModel employeeEntryExitModel : employeeEntryExitListToday) {
-				if (employeeEntryExitModel.getSso().equals(sso)) {
-					if (employeeEntryExitModel.getCheckOutTime() == null) {
-						employeeEntryExitModel.setCheckOutTime(Calendar.getInstance().getTime());
+			if (floorData.getFloorEmployeeData().keySet().contains(generalUtils.convertTimeToStringData())) {
+				List<EmployeeEntryExitModel> employeeEntryExitListToday = FloorData1
+						.get(generalUtils.convertTimeToStringData());
+				for (EmployeeEntryExitModel employeeEntryExitModel : employeeEntryExitListToday) {
+					if (employeeEntryExitModel.getSso().equals(sso)) {
+						if (employeeEntryExitModel.getCheckOutTime() == null) {
+							employeeEntryExitModel.setCheckOutTime(Calendar.getInstance().getTime());
+						}
 					}
 				}
 			}
@@ -115,11 +122,14 @@ public class EntryExitScanService {
 	public int getEmployeesPresentInCommonSpace(String floorId, String date) {
 		List<FloorDataModel> floorData = floorDatarepository.queryForFloorDate(floorId, date);
 		int count = 0;
-		for (EmployeeEntryExitModel employeeEntryExit : floorData.get(0).getFloorEmployeeData().get(date)) {
-			if (employeeEntryExit.getCheckOutTime() == null) {
-				count++;
+		if(floorData.get(0).getFloorEmployeeData().containsKey(date)){
+			for (EmployeeEntryExitModel employeeEntryExit : floorData.get(0).getFloorEmployeeData().get(date)) {
+				if (employeeEntryExit.getCheckOutTime() == null) {
+					count++;
+				}
 			}
 		}
+		
 		return count;
 
 	}

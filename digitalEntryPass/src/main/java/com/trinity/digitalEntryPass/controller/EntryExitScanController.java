@@ -61,7 +61,12 @@ public class EntryExitScanController {
 			if (floorData == null) {
 				Map<String, List<EmployeeEntryExitModel>> newFloorData = new HashMap<String, List<EmployeeEntryExitModel>>();
 				floorData = new FloorDataModel(floorIdCode, floorIdCode, newFloorData);
-
+				//floorDatarepository.save(floorData);
+				entryExitScanService.saveQRFloorScan(floorData);
+				// exiting a floor that doesnt exist
+				if(scanType.equals(ScanType.EXIT.toString())){
+					return 0;
+				}
 			}
 
 			// mark all possible open and exit entryes
