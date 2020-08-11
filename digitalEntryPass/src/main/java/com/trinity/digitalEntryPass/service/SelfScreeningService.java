@@ -1,5 +1,6 @@
 package com.trinity.digitalEntryPass.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,50 +35,60 @@ public class SelfScreeningService {
 	@Autowired
 	EmployeeEntryExitRepository employeeExitRepository;
 
-	public void saveScreeningInfoToCustomer(String userName, SelfScreeningModel newSelfScreeningData) {
+	public String saveScreeningInfoToCustomer(String userName, SelfScreeningModel newSelfScreeningData) {
 		AccountInfoModel userAccountModel = accountInfoDoc.getAccountInfo(userName);
 		List<SelfScreeningModel> selfScreeningList = userAccountModel.getSelfScreeningModel();
+		if (selfScreeningList == null) {
+			selfScreeningList = new ArrayList<SelfScreeningModel>();
+		}
 		newSelfScreeningData.setDate(generalUtils.convertTimeToStringData());
 		selfScreeningList.add(newSelfScreeningData);
 		userAccountModel.setSelfScreeningModel(selfScreeningList);
 		accountInfoDoc.saveAccountInfo(userAccountModel);
+		return "Screening information saved";
 	}
 
 	public SelfScreeningModel getCustomerScreeningInfo(String userName) {
 		AccountInfoModel userAccountModel = accountInfoMongoRepository.findById(userName).get();
-		return userAccountModel.getSelfScreeningModel().get(userAccountModel.getSelfScreeningModel().size() - 1);
-
+		if (userAccountModel.getSelfScreeningModel() != null) {
+			return userAccountModel.getSelfScreeningModel().get(userAccountModel.getSelfScreeningModel().size() - 1);
+		}
+		return null;
 	}
 
-	public void updateLatestCustomerScreeningInfo(String userName, SelfScreeningModel newSelfScreeningModel) {
+	public String updateLatestCustomerScreeningInfo(String userName, SelfScreeningModel newSelfScreeningModel) {
 		AccountInfoModel userAccountModel = accountInfoMongoRepository.findById(userName).get();
-		SelfScreeningModel selfScreeningList = userAccountModel.getSelfScreeningModel()
-				.get(userAccountModel.getSelfScreeningModel().size() - 1);
+		if (userAccountModel.getSelfScreeningModel() != null) {
+			SelfScreeningModel selfScreeningList = userAccountModel.getSelfScreeningModel()
+					.get(userAccountModel.getSelfScreeningModel().size() - 1);
 
-		selfScreeningList.setBreathingDifficulty(newSelfScreeningModel.getBreathingDifficulty());
-		selfScreeningList.setCloseContact(newSelfScreeningModel.getCloseContact());
-		selfScreeningList.setCough(newSelfScreeningModel.getCough());
-		selfScreeningList.setDate(generalUtils.convertTimeToStringData());
-		selfScreeningList.setFever(newSelfScreeningModel.getFever());
-		selfScreeningList.setFromContainmentZone(newSelfScreeningModel.getFromContainmentZone());
-		selfScreeningList.setIsApthamitraPresent(newSelfScreeningModel.getIsApthamitraPresent());
-		selfScreeningList.setIsArogaSetuPresent(newSelfScreeningModel.getIsArogaSetuPresent());
-		selfScreeningList.setSoreThroat(newSelfScreeningModel.getSoreThroat());
-		selfScreeningList.setVisitedCountries(newSelfScreeningModel.getVisitedCountries());
-		selfScreeningDao.saveSelfScreeningDao(userAccountModel);
-
+			selfScreeningList.setBreathingDifficulty(newSelfScreeningModel.getBreathingDifficulty());
+			selfScreeningList.setCloseContact(newSelfScreeningModel.getCloseContact());
+			selfScreeningList.setCough(newSelfScreeningModel.getCough());
+			selfScreeningList.setDate(generalUtils.convertTimeToStringData());
+			selfScreeningList.setFever(newSelfScreeningModel.getFever());
+			selfScreeningList.setFromContainmentZone(newSelfScreeningModel.getFromContainmentZone());
+			selfScreeningList.setIsApthamitraPresent(newSelfScreeningModel.getIsApthamitraPresent());
+			selfScreeningList.setIsArogaSetuPresent(newSelfScreeningModel.getIsArogaSetuPresent());
+			selfScreeningList.setSoreThroat(newSelfScreeningModel.getSoreThroat());
+			selfScreeningList.setVisitedCountries(newSelfScreeningModel.getVisitedCountries());
+			selfScreeningDao.saveSelfScreeningDao(userAccountModel);
+			return "Update successful";
+		}
+		return "No Self Screening information present";
 	}
 
-//	public int getEmployeesPresentInCommonSpace(String date) {
-//		List<FloorDataModel> floorData = floorDatarepository.queryForFloorDate();
-//		int count = 0;
-//		for (EmployeeEntryExitModel employeeEntryExit : floorData.get(0).getFloorEmployeeData().get(date)) {
-//			if (employeeEntryExit.getCheckOutTime() == null) {
-//				count++;
-//			}
-//		}
-//		return count;
-//
-//	}
+	// public int getEmployeesPresentInCommonSpace(String date) {
+	// List<FloorDataModel> floorData = floorDatarepository.queryForFloorDate();
+	// int count = 0;
+	// for (EmployeeEntryExitModel employeeEntryExit :
+	// floorData.get(0).getFloorEmployeeData().get(date)) {
+	// if (employeeEntryExit.getCheckOutTime() == null) {
+	// count++;
+	// }
+	// }
+	// return count;
+	//
+	// }
 
 }

@@ -13,7 +13,6 @@ import com.trinity.digitalEntryPass.service.impl.UserDetailsServiceImpl;
 @RestController
 public class SelfScreeningController {
 
-	
 	@Autowired
 	SelfScreeningService selfScreeningService;
 
@@ -21,8 +20,8 @@ public class SelfScreeningController {
 	UserDetailsServiceImpl userDetailsServiceImpl;
 
 	@RequestMapping(value = "/selfScreening", method = RequestMethod.POST)
-	public void saveSelfScreening(@RequestBody SelfScreeningModel selfScreeningModel) {
-		selfScreeningService.saveScreeningInfoToCustomer(userDetailsServiceImpl.getCurrentUserfromToken(),
+	public String saveSelfScreening(@RequestBody SelfScreeningModel selfScreeningModel) {
+		return selfScreeningService.saveScreeningInfoToCustomer(userDetailsServiceImpl.getCurrentUserfromToken(),
 				selfScreeningModel);
 	}
 
@@ -32,8 +31,8 @@ public class SelfScreeningController {
 	}
 
 	@RequestMapping(value = "/selfScreening", method = RequestMethod.PUT)
-	public void updateSelfScreening(@RequestBody SelfScreeningModel newSelfScreeningModel) {
-		selfScreeningService.updateLatestCustomerScreeningInfo(userDetailsServiceImpl.getCurrentUserfromToken(),
+	public String updateSelfScreening(@RequestBody SelfScreeningModel newSelfScreeningModel) {
+		return selfScreeningService.updateLatestCustomerScreeningInfo(userDetailsServiceImpl.getCurrentUserfromToken(),
 				newSelfScreeningModel);
 	}
 
