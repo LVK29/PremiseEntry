@@ -34,7 +34,7 @@ public class GeSelfScreeningForm {
 	@Autowired
 	GeneralUtils generalUtils;
 
-	public ByteArrayOutputStream generateForm(String date, String user) throws DocumentException {
+	public byte[] generateForm(String date, String user) throws DocumentException {
 		// Creating PDF document object
 		String fileName = "filled_GESelfScreening_Form_"+user+".pdf";
 		AccountInfoModel accInfo = accountInfoMongoRepository.findByssoAndSelfScreeningModelDate(user, date);
@@ -62,15 +62,16 @@ public class GeSelfScreeningForm {
 			
 			pdfStamper.close();
 
-			return outputStream;
+			System.out.println("PDF created");
+
+			return outputStream.toByteArray();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		System.out.println("PDF created");
-		return outputStream;
+		return outputStream.toByteArray();
 
 	}
 

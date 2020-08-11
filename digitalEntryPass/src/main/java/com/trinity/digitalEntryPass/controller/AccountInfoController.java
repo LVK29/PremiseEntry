@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,6 +38,7 @@ import com.trinity.digitalEntryPass.model.SelfScreeningModel;
 import com.trinity.digitalEntryPass.repository.AccountInfoMongoRepository;
 import com.trinity.digitalEntryPass.service.AccountInfoService;
 import com.trinity.digitalEntryPass.service.GeSelfScreeningForm;
+import com.trinity.digitalEntryPass.service.GeneralUtils;
 import com.trinity.digitalEntryPass.service.GovtFormGenerator;
 import com.trinity.digitalEntryPass.service.impl.UserDetailsServiceImpl;
 
@@ -52,10 +54,19 @@ public class AccountInfoController {
 	@Autowired
 	UserDetailsServiceImpl userDetailsServiceImpl;
 	
-
 	@Autowired
 	GovtFormGenerator govtFormGenerator;
 	
+	@Autowired
+	GeSelfScreeningForm geSelfScreeningForm;
+	
+	@Autowired
+	GeneralUtils generalUtils;
+	
+	private String GOVTFORM = "govtForm";
+	private String VISITORFORM = "visForm";
+	
+
 
 	@RequestMapping(value = "/accountInfo", method = RequestMethod.POST)
 	public void saveAccountInfo(@RequestBody AccountInfoModel accountInfoModel) {
@@ -76,7 +87,7 @@ public class AccountInfoController {
 
 	@RequestMapping(value = "/accountInfo", method = RequestMethod.GET)
 	public AccountInfoModel getAccountInfo() {
-		// accountInfoMongoRepository.findBySelfScreeningModel_Date("08/08/2020");
+		 //accountInfoMongoRepository.findBySelfScreeningModel_Date("08/08/2020");
 		 return accountInfoService.getAccountInfo(userDetailsServiceImpl.getCurrentUserfromToken());
 	}
 
@@ -87,24 +98,31 @@ public class AccountInfoController {
 
 	@RequestMapping(value = "/accountInfo/{screenDate}", method = RequestMethod.GET)
 	public List<AccountInfoModel> getAccountInfoByScreenDate(@PathVariable String screenDate) {
-		screenDate=screenDate.replace("-", "/");
+		screenDate=generalUtils.dateFormatter(screenDate);
 		AccountInfoModel account =accountInfoMongoRepository.findBysso(userDetailsServiceImpl.getCurrentUserfromToken());
 		if(account.getUserType().equals(VisitorType.ADMIN))
 			return accountInfoMongoRepository.findBySelfScreeningModel_Date(screenDate);
 		return null;
 	}
 	
-	@RequestMapping(value = "/accountInfo/documentFile/{sso}/{date}/{visitorType}", method = RequestMethod.POST, produces=MediaType.APPLICATION_PDF_VALUE)
-	public @ResponseBody byte[] getDocuments(@PathVariable("date") String date, @PathVariable("sso") String sso, @PathVariable("visitorType") VisitorType visitorType) throws IOException
-	{
+	@RequestMapping(value = "/accountInfo/documentFile", method = RequestMethod.POST, produces=MediaType.APPLICATION_PDF_VALUE)
+	public @ResponseBody byte[] getDocuments(@RequestBody Map<String, String> request) throws IOException
+	{{
 		byte[] formData = null;
-		date=date.replace("-", "/");
+		String sso = request.get("sso");
+		String date=request.get("date");
+		String docType=request.get("docType");
+		date=generalUtils.dateFormatter(date);
 		try {
 			AccountInfoModel account =accountInfoMongoRepository.findBysso(userDetailsServiceImpl.getCurrentUserfromToken());
-			if(account.getUserType().equals(VisitorType.ADMIN))
+			if(docType!=null && docType.equals(GOVTFORM))
 			{
-					formData = govtFormGenerator.generateForm(date,sso, visitorType);
+					formData = govtFormGenerator.generateForm(date,sso);
 
+			}
+			if(docType!=null && docType.equals(VISITORFORM) && account.getUserType().equals(VisitorType.CONTRACTOR))
+			{
+				formData=geSelfScreeningForm.generateForm(date, sso);
 			}
 		}
 		
@@ -112,9 +130,7 @@ public class AccountInfoController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return formData;
-		 
+		return formData; 
 	}
-	
-	
+	}
 }

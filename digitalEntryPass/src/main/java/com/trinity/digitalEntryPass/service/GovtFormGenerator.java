@@ -73,19 +73,19 @@ public class GovtFormGenerator {
 
 			addTicks(content,accInfo);
 
-			pdfStamper.close();
-			if(accInfo.getUserType().equals(VisitorType.CONTRACTOR))
-			{
-				List<byte[]> combinedData= new ArrayList<byte[]>();
-				combinedData.add(outputStream.toByteArray());
-				combinedData.add(geSelfScreeningForm.generateForm(date, user).toByteArray());
-				return combinePdfBytes(combinedData);
-			}
-			else
-			{
-				return outputStream.toByteArray();
-			}
-			
+//			pdfStamper.close();
+//			if(accInfo.getUserType().equals(VisitorType.CONTRACTOR))
+//			{
+//				List<byte[]> combinedData= new ArrayList<byte[]>();
+//				combinedData.add(outputStream.toByteArray());
+//				combinedData.add(geSelfScreeningForm.generateForm(date, user).toByteArray());
+//				return combinePdfBytes(combinedData);
+//			}
+//			else
+//			{
+//				return outputStream.toByteArray();
+//			}
+			return outputStream.toByteArray();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

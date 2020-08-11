@@ -71,5 +71,9 @@ public class GeneralUtils {
 		}
 		return byteArrayOutputStream;
 	}
+	
+	public String dateFormatter(String date) {
+		return date.replace("-", "/");
+	}
 
 }
