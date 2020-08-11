@@ -38,6 +38,7 @@ import com.trinity.digitalEntryPass.model.SelfScreeningModel;
 import com.trinity.digitalEntryPass.repository.AccountInfoMongoRepository;
 import com.trinity.digitalEntryPass.service.AccountInfoService;
 import com.trinity.digitalEntryPass.service.GeSelfScreeningForm;
+import com.trinity.digitalEntryPass.service.GeneralUtils;
 import com.trinity.digitalEntryPass.service.GovtFormGenerator;
 import com.trinity.digitalEntryPass.service.impl.UserDetailsServiceImpl;
 
@@ -58,6 +59,9 @@ public class AccountInfoController {
 	
 	@Autowired
 	GeSelfScreeningForm geSelfScreeningForm;
+	
+	@Autowired
+	GeneralUtils generalUtils;
 	
 	private String GOVTFORM = "govtForm";
 	private String VISITORFORM = "visForm";
@@ -94,7 +98,7 @@ public class AccountInfoController {
 
 	@RequestMapping(value = "/accountInfo/{screenDate}", method = RequestMethod.GET)
 	public List<AccountInfoModel> getAccountInfoByScreenDate(@PathVariable String screenDate) {
-		screenDate=screenDate.replace("-", "/");
+		screenDate=generalUtils.dateFormatter(screenDate);
 		AccountInfoModel account =accountInfoMongoRepository.findBysso(userDetailsServiceImpl.getCurrentUserfromToken());
 		if(account.getUserType().equals(VisitorType.ADMIN))
 			return accountInfoMongoRepository.findBySelfScreeningModel_Date(screenDate);
@@ -108,7 +112,7 @@ public class AccountInfoController {
 		String sso = request.get("sso");
 		String date=request.get("date");
 		String docType=request.get("docType");
-		date=date.replace("-", "/");
+		date=generalUtils.dateFormatter(date);
 		try {
 			AccountInfoModel account =accountInfoMongoRepository.findBysso(userDetailsServiceImpl.getCurrentUserfromToken());
 			if(docType!=null && docType.equals(GOVTFORM))
