@@ -114,7 +114,7 @@ public class AccountInfoController {
 		String docType=request.get("docType");
 		date=generalUtils.dateFormatter(date);
 		try {
-			AccountInfoModel account =accountInfoMongoRepository.findBysso(userDetailsServiceImpl.getCurrentUserfromToken());
+			AccountInfoModel account =accountInfoMongoRepository.findBysso(sso);
 			if(docType!=null && docType.equals(GOVTFORM))
 			{
 					formData = govtFormGenerator.generateForm(date,sso);
