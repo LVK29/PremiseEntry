@@ -73,7 +73,7 @@ public class GovtFormGenerator {
 
 			addTicks(content,accInfo);
 
-//			pdfStamper.close();
+			pdfStamper.close();
 //			if(accInfo.getUserType().equals(VisitorType.CONTRACTOR))
 //			{
 //				List<byte[]> combinedData= new ArrayList<byte[]>();
