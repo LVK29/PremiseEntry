@@ -122,16 +122,20 @@ public class EntryExitScanService {
 	public int getEmployeesPresentInCommonSpace(String floorId, String date) {
 		List<FloorDataModel> floorData = floorDatarepository.queryForFloorDate(floorId, date);
 		int count = 0;
-		if(floorData.get(0).getFloorEmployeeData().containsKey(date)){
+		if (floorData.get(0).getFloorEmployeeData().containsKey(date)) {
 			for (EmployeeEntryExitModel employeeEntryExit : floorData.get(0).getFloorEmployeeData().get(date)) {
 				if (employeeEntryExit.getCheckOutTime() == null) {
 					count++;
 				}
 			}
 		}
-		
+
 		return count;
 
+	}
+
+	public List<FloorDataModel> getFloorDataList() {
+		return floorDatarepository.findAll();
 	}
 
 	public FloorDataModel getFloorDetails(String floodId) {

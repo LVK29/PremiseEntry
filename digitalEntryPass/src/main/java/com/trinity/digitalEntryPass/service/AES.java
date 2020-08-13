@@ -9,6 +9,9 @@ import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class AES {
 
 	private static SecretKeySpec secretKey;

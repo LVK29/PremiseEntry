@@ -8,7 +8,7 @@ public class DigitalEntryPassApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DigitalEntryPassApplication.class, args);
-		System.out.println("yoyoyo");
+		System.out.println("TRINITY: DigitalEntry is running");
 	}
 
 }
