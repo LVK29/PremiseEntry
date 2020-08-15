@@ -15,6 +15,7 @@ import com.trinity.digitalEntryPass.service.impl.UserDetailsServiceImpl;
 @RestController
 public class QRCodeController {
 
+
 	@Autowired
 	QRCodeService qrCodeService;
 	@Autowired
@@ -35,4 +36,5 @@ public class QRCodeController {
 		return null;
 	}
 
+ 
 }
